@@ -98,6 +98,8 @@
     <script src="{{ asset('backend/js/app/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('backend/js/app/adminlte.min.js') }}"></script>
 
+    <script src="{{ mix('js/app.js') }}"></script>
+
     @yield('modal')
     @yield('scripts')
 </html>
