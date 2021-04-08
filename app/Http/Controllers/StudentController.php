@@ -13,7 +13,16 @@ class StudentController extends Controller
         $paginate = request('paginate',10);
         $search_term = request('q','');
 
+        $selectedClass = request('selectedClass');
+        $selectedSection = request('selectedSection');
+
         $students = Student::with(['class','section'])
+        ->when($selectedClass,function($query) use ($selectedClass){
+            $query->where('class_id',$selectedClass);
+        })
+        ->when($selectedSection,function($query) use ($selectedSection){
+            $query->where('section_id',$selectedSection);
+        })
         ->search(trim($search_term))
         ->paginate($paginate);
 

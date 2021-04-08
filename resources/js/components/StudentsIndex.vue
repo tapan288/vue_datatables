@@ -18,21 +18,21 @@
                     <div class="d-flex align-items-center ml-4">
                         <label for="paginate" class="text-nowrap mr-2 mb-0"
                             >FilterBy Class</label>
-                        <select class="form-control form-control-sm">
+                        <select v-model="selectedClass" class="form-control form-control-sm">
                             <option value="">All Class</option>
-                            <option value="1">Class 1</option>
+                            <option v-for="item in classes" :key="item.id" :value="item.id">{{ item.name }}</option>
                         </select>
                     </div>
                 </div>
 
-                <div>
+                <div v-if="selectedClass">
                     <div class="d-flex align-items-center ml-4">
                         <label for="paginate" class="text-nowrap mr-2 mb-0"
                             >Section</label
                         >
-                        <select class="form-control form-control-sm">
+                        <select v-model="selectedSection" class="form-control form-control-sm">
                             <option value="">Select a Section</option>
-                            <option value="1">Section A</option>
+                            <option v-for="section in sections" :key="section.id" :value="section.id">{{ section.name }}</option>
                         </select>
                     </div>
                 </div>
