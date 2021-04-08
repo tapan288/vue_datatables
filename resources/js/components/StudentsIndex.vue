@@ -17,8 +17,7 @@
                 <div>
                     <div class="d-flex align-items-center ml-4">
                         <label for="paginate" class="text-nowrap mr-2 mb-0"
-                            >FilterBy Class</label
-                        >
+                            >FilterBy Class</label>
                         <select class="form-control form-control-sm">
                             <option value="">All Class</option>
                             <option value="1">Class 1</option>
@@ -47,10 +46,19 @@
                             With Checked (1)
                         </button>
                         <div class="dropdown-menu">
-                            <a href="#" class="dropdown-item" type="button">
+                            <a
+                                href="#"
+                                class="dropdown-item"
+                                type="button"
+                            >
                                 Delete
                             </a>
-                            <a class="dropdown-item" type="button">
+
+                            <a
+                                href="#"
+                                class="dropdown-item"
+                                type="button"
+                            >
                                 Export
                             </a>
                         </div>
@@ -58,7 +66,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <input
+                <input v-model.lazy="search"
                     type="search"
                     class="form-control"
                     placeholder="Search by name,email,phone,or address..."
@@ -137,18 +145,41 @@ export default {
         return {
             students: {},
             paginate : 10,
+            search : "",
+            classes : {},
+            selectedClass : '',
+            selectedSection : '',
+            sections : {},
         }
     },
 
     watch:{
         paginate: function(value){
             this.getStudents();
+        },
+        search: function(value){
+            this.getStudents();
+        },
+        selectedClass : function(value){
+            axios.get('/api/sections?class_id=' + this.selectedClass)
+            .then(response => {
+                this.sections = response.data.data;
+            });
+            this.getStudents();
+        },
+        selectedSection: function(value){
+            this.getStudents();
         }
     },
 
     methods: {
         getStudents(page = 1){
-            axios.get('/api/students?page='+ page + '&paginate=' + this.paginate)
+            axios.get('/api/students?page='+ page
+            + '&paginate=' + this.paginate
+            + '&q=' + this.search
+            + '&selectedClass=' + this.selectedClass
+            + '&selectedSection=' + this.selectedSection
+            )
             .then(response => {
                 this.students = response.data;
             });
@@ -156,6 +187,11 @@ export default {
     },
 
     mounted(){
+        axios.get('/api/classes')
+        .then(response => {
+            console.log(response);
+            this.classes = response.data.data;
+        });
         this.getStudents();
     }
 };
