@@ -7,7 +7,10 @@
                         <label for="paginate" class="text-nowrap mr-2 mb-0"
                             >Per Page</label
                         >
-                        <select v-model="paginate" class="form-control form-control-sm">
+                        <select
+                            v-model="paginate"
+                            class="form-control form-control-sm"
+                        >
                             <option value="10">10</option>
                             <option value="20">20</option>
                             <option value="30">30</option>
@@ -17,10 +20,19 @@
                 <div>
                     <div class="d-flex align-items-center ml-4">
                         <label for="paginate" class="text-nowrap mr-2 mb-0"
-                            >FilterBy Class</label>
-                        <select v-model="selectedClass" class="form-control form-control-sm">
+                            >FilterBy Class</label
+                        >
+                        <select
+                            v-model="selectedClass"
+                            class="form-control form-control-sm"
+                        >
                             <option value="">All Class</option>
-                            <option v-for="item in classes" :key="item.id" :value="item.id">{{ item.name }}</option>
+                            <option
+                                v-for="item in classes"
+                                :key="item.id"
+                                :value="item.id"
+                                >{{ item.name }}</option
+                            >
                         </select>
                     </div>
                 </div>
@@ -30,26 +42,36 @@
                         <label for="paginate" class="text-nowrap mr-2 mb-0"
                             >Section</label
                         >
-                        <select v-model="selectedSection" class="form-control form-control-sm">
+                        <select
+                            v-model="selectedSection"
+                            class="form-control form-control-sm"
+                        >
                             <option value="">Select a Section</option>
-                            <option v-for="section in sections" :key="section.id" :value="section.id">{{ section.name }}</option>
+                            <option
+                                v-for="section in sections"
+                                :key="section.id"
+                                :value="section.id"
+                                >{{ section.name }}</option
+                            >
                         </select>
                     </div>
                 </div>
 
                 <div>
                     <div class="dropdown ml-4">
-                        <button
+                        <button v-if="checked.length > 0"
                             class="btn btn-secondary dropdown-toggle"
                             data-toggle="dropdown"
                         >
-                            With Checked (1)
+                            With Checked ({{ checked.length }})
                         </button>
                         <div class="dropdown-menu">
                             <a
                                 href="#"
+                                onclick="confirm('Are you sure you wanna delete this Record?') || event.stopImmediatePropagation()"
                                 class="dropdown-item"
                                 type="button"
+                                @click.prevent="deleteRecords"
                             >
                                 Delete
                             </a>
@@ -64,9 +86,11 @@
                         </div>
                     </div>
                 </div>
+
             </div>
             <div class="col-md-4">
-                <input v-model.lazy="search"
+                <input
+                    v-model.lazy="search"
                     type="search"
                     class="form-control"
                     placeholder="Search by name,email,phone,or address..."
@@ -74,15 +98,15 @@
             </div>
         </div>
 
-        <div class="col-md-10 mb-2">
-            <div>
+        <div class="col-md-10 mb-2" v-if="selectPage">
+            <div v-if="selectAll">
                 You are currently selecting all
-                <strong>10</strong> items.
+                <strong>{{ checked.length }}</strong> items.
             </div>
-            <div>
-                You have selected <strong>10</strong> items, Do you want to
-                Select All <strong>25</strong>?
-                <a href="" class="ml-2">Select All</a>
+            <div v-else>
+                You have selected <strong>{{ checked.length }}</strong> items, Do you want to
+                Select All <strong>{{ students.meta.total }}</strong>?
+                <a @click.prevent="selectAllRecords" href="#" class="ml-2">Select All</a>
             </div>
         </div>
 
@@ -90,7 +114,7 @@
             <table class="table table-hover">
                 <tbody>
                     <tr>
-                        <th><input type="checkbox" /></th>
+                        <th><input type="checkbox" v-model="selectPage" /></th>
                         <th>
                             Student's Name
                         </th>
@@ -113,7 +137,7 @@
 
                     <tr v-for="student in students.data" :key="student.id">
                         <td>
-                            <input type="checkbox" />
+                            <input type="checkbox" :value="student.id" v-model="checked"/>
                         </td>
                         <td>{{ student.name }}</td>
                         <td>{{ student.email }}</td>
@@ -123,7 +147,7 @@
                         <td>{{ student.class }}</td>
                         <td>{{ student.section }}</td>
                         <td>
-                            <button class="btn btn-danger btn-sm">
+                            <button onclick="confirm('Are you sure you wanna delete this Record?') || event.stopImmediatePropagation()" class="btn btn-danger btn-sm" @click="deleteSingleRecord(student.id)">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </button>
                         </td>
@@ -133,7 +157,10 @@
         </div>
         <div class="row mt-4">
             <div class="col-sm-6 offset-5">
-                <pagination :data="students" @pagination-change-page="getStudents"></pagination>
+                <pagination
+                    :data="students"
+                    @pagination-change-page="getStudents"
+                ></pagination>
             </div>
         </div>
     </div>
@@ -141,54 +168,103 @@
 
 <script>
 export default {
-    data(){
+    data() {
         return {
             students: {},
-            paginate : 10,
-            search : "",
-            classes : {},
-            selectedClass : '',
-            selectedSection : '',
-            sections : {},
-        }
+            paginate: 10,
+            search: "",
+            classes: {},
+            selectedClass: "",
+            selectedSection: "",
+            sections: {},
+            checked: [],
+            selectPage : false,
+            selectAll : false,
+        };
     },
 
-    watch:{
-        paginate: function(value){
+    watch: {
+        paginate: function(value) {
             this.getStudents();
         },
-        search: function(value){
+        search: function(value) {
             this.getStudents();
         },
-        selectedClass : function(value){
-            axios.get('/api/sections?class_id=' + this.selectedClass)
-            .then(response => {
-                this.sections = response.data.data;
-            });
+        selectedClass: function(value) {
+            axios
+                .get("/api/sections?class_id=" + this.selectedClass)
+                .then(response => {
+                    this.sections = response.data.data;
+                });
             this.getStudents();
         },
-        selectedSection: function(value){
+        selectedSection: function(value) {
             this.getStudents();
+        },
+        selectPage: function(value){
+            this.checked = [];
+            if(value){
+                this.students.data.forEach(student => {
+                    this.checked.push(student.id);
+                });
+            }else{
+                this.checked = [];
+                this.selectAll = false;
+            }
         }
+
     },
 
     methods: {
-        getStudents(page = 1){
-            axios.get('/api/students?page='+ page
-            + '&paginate=' + this.paginate
-            + '&q=' + this.search
-            + '&selectedClass=' + this.selectedClass
-            + '&selectedSection=' + this.selectedSection
-            )
+        selectAllRecords(){
+            axios.get('/api/students/all')
             .then(response => {
-                this.students = response.data;
+                this.checked = response.data;
+                this.selectAll = true;
             });
+
+
+        },
+        deleteSingleRecord(student_id){
+            axios.delete('/api/student/delete/' + student_id)
+            .then(response => {
+                this.checked = this.checked.filter(id => id != student_id);
+                this.$toast.success('Student Deleted Successfully');
+                this.getStudents();
+            });
+        },
+        deleteRecords(){
+            axios.delete('/api/students/massDestroy/' + this.checked)
+            .then(response => {
+                if(response.status == 204){
+                    this.$toast.success('Selected Students were Deleted Successfully');
+                    this.checked = [];
+                    this.getStudents();
+                }
+            });
+        },
+        getStudents(page = 1) {
+            axios
+                .get(
+                    "/api/students?page=" +
+                        page +
+                        "&paginate=" +
+                        this.paginate +
+                        "&q=" +
+                        this.search +
+                        "&selectedClass=" +
+                        this.selectedClass +
+                        "&selectedSection=" +
+                        this.selectedSection
+                )
+                .then(response => {
+                    this.students = response.data;
+                });
         }
     },
 
-    mounted(){
-        axios.get('/api/classes')
-        .then(response => {
+    mounted() {
+        axios.get("/api/classes").then(response => {
             console.log(response);
             this.classes = response.data.data;
         });

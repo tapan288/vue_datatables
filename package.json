@@ -25,6 +25,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "laravel-vue-pagination": "^2.3.1"
+        "laravel-vue-pagination": "^2.3.1",
+        "vue-toast-notification": "^0.6.1"
     }
 }

@@ -7,6 +7,12 @@
 require('./bootstrap');
 
 window.Vue = require('vue').default;
+import VueToast from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
+
+Vue.use(VueToast,{
+    position: 'top-right'
+});
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('students-index', require('./components/StudentsIndex.vue').default);
