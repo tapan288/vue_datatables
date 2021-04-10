@@ -116,26 +116,36 @@
                     <tr>
                         <th><input type="checkbox" v-model="selectPage" /></th>
                         <th>
-                            Student's Name
+                            <a href="#" @click.prevent="change_sort('name')">Student's Name</a>
+                            <span v-if="sort_direction == 'desc' && sort_field == 'name'">&uarr;</span>
+                            <span v-if="sort_direction == 'asc' && sort_field == 'name'">&darr;</span>
                         </th>
                         <th>
-                            Email
+                            <a href="#" @click.prevent="change_sort('email')">Email</a>
+                            <span v-if="sort_direction == 'desc' && sort_field == 'email'">&uarr;</span>
+                            <span v-if="sort_direction == 'asc' && sort_field == 'email'">&darr;</span>
                         </th>
                         <th>
-                            Address
+                            <a href="#" @click.prevent="change_sort('address')">Address</a>
+                            <span v-if="sort_direction == 'desc' && sort_field == 'address'">&uarr;</span>
+                            <span v-if="sort_direction == 'asc' && sort_field == 'address'">&darr;</span>
                         </th>
                         <th>
-                            Phone Number
+                            <a href="#" @click.prevent="change_sort('phone_number')">Phone Number</a>
+                            <span v-if="sort_direction == 'desc' && sort_field == 'phone_number'">&uarr;</span>
+                            <span v-if="sort_direction == 'asc' && sort_field == 'phone_number'">&darr;</span>
                         </th>
                         <th>
-                            Created At
+                            <a href="#" @click.prevent="change_sort('created_at')">Created At</a>
+                            <span v-if="sort_direction == 'desc' && sort_field == 'created_at'">&uarr;</span>
+                            <span v-if="sort_direction == 'asc' && sort_field == 'created_at'">&darr;</span>
                         </th>
                         <th>Class</th>
                         <th>Section</th>
                         <th>Action</th>
                     </tr>
 
-                    <tr v-for="student in students.data" :key="student.id">
+                    <tr v-for="student in students.data" :key="student.id" :class="isChecked(student.id) ? 'table-primary' : ''">
                         <td>
                             <input type="checkbox" :value="student.id" v-model="checked"/>
                         </td>
@@ -180,6 +190,8 @@ export default {
             checked: [],
             selectPage : false,
             selectAll : false,
+            sort_direction : 'desc',
+            sort_field: 'created_at'
         };
     },
 
@@ -222,8 +234,14 @@ export default {
                 this.checked = response.data;
                 this.selectAll = true;
             });
-
-
+        },
+        change_sort(field){
+            if(this.sort_field == field){
+                this.sort_direction = this.sort_direction == "asc" ? "desc" : "asc";
+            }else{
+                this.sort_field = field;
+            }
+            this.getStudents();
         },
         deleteSingleRecord(student_id){
             axios.delete('/api/student/delete/' + student_id)
@@ -243,6 +261,9 @@ export default {
                 }
             });
         },
+        isChecked(student_id){
+            return this.checked.includes(student_id);
+        },
         getStudents(page = 1) {
             axios
                 .get(
@@ -255,7 +276,11 @@ export default {
                         "&selectedClass=" +
                         this.selectedClass +
                         "&selectedSection=" +
-                        this.selectedSection
+                        this.selectedSection +
+                        "&sort_direction=" +
+                        this.sort_direction +
+                        "&sort_field=" +
+                        this.sort_field
                 )
                 .then(response => {
                     this.students = response.data;
