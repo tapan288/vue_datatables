@@ -2072,7 +2072,8 @@ __webpack_require__.r(__webpack_exports__);
       selectPage: false,
       selectAll: false,
       sort_direction: 'desc',
-      sort_field: 'created_at'
+      sort_field: 'created_at',
+      url: ''
     };
   },
   watch: {
@@ -2106,6 +2107,9 @@ __webpack_require__.r(__webpack_exports__);
         this.checked = [];
         this.selectAll = false;
       }
+    },
+    checked: function checked(value) {
+      this.url = "/api/students/export/" + this.checked;
     }
   },
   methods: {
@@ -38764,7 +38768,7 @@ var render = function() {
                   "a",
                   {
                     staticClass: "dropdown-item",
-                    attrs: { href: "#", type: "button" }
+                    attrs: { href: _vm.url, type: "button" }
                   },
                   [
                     _vm._v(

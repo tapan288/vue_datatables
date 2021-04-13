@@ -29,3 +29,5 @@ Route::get('/sections',[SectionController::class,'index']);
 
 Route::delete('student/delete/{student}', [StudentController::class,'destroy']);
 Route::delete('students/massDestroy/{students}', [StudentController::class,'massDestroy']);
+
+Route::get('students/export/{students}',[StudentController::class,'export']);
