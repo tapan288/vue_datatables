@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\StudentsExport;
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -34,8 +35,8 @@ class StudentController extends Controller
         ->when($selectedSection,function($query) use ($selectedSection){
             $query->where('section_id',$selectedSection);
         })
+
         ->search(trim($search_term))
-        ->orderBy($sort_field,$sort_direction)
         ->paginate($paginate);
 
         return StudentResource::collection($students);
@@ -58,5 +59,11 @@ class StudentController extends Controller
         $studentsArray = explode(',',$students);
         Student::whereKey($studentsArray)->delete();
         return response()->noContent();
+    }
+
+    public function export($students)
+    {
+        $studentsArray = explode(',',$students);
+        return (new StudentsExport($studentsArray))->download('students.xlsx');
     }
 }

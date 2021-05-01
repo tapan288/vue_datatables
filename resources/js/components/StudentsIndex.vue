@@ -77,7 +77,7 @@
                             </a>
 
                             <a
-                                href="#"
+                                :href="url"
                                 class="dropdown-item"
                                 type="button"
                             >
@@ -191,7 +191,8 @@ export default {
             selectPage : false,
             selectAll : false,
             sort_direction : 'desc',
-            sort_field: 'created_at'
+            sort_field: 'created_at',
+            url : '',
         };
     },
 
@@ -223,6 +224,9 @@ export default {
                 this.checked = [];
                 this.selectAll = false;
             }
+        },
+        checked: function(value){
+            this.url = "/api/students/export/" + this.checked;
         }
 
     },
