@@ -2048,6 +2048,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2060,7 +2070,9 @@ __webpack_require__.r(__webpack_exports__);
       sections: {},
       checked: [],
       selectPage: false,
-      selectAll: false
+      selectAll: false,
+      sort_direction: 'desc',
+      sort_field: 'created_at'
     };
   },
   watch: {
@@ -2105,6 +2117,15 @@ __webpack_require__.r(__webpack_exports__);
         _this3.selectAll = true;
       });
     },
+    change_sort: function change_sort(field) {
+      if (this.sort_field == field) {
+        this.sort_direction = this.sort_direction == "asc" ? "desc" : "asc";
+      } else {
+        this.sort_field = field;
+      }
+
+      this.getStudents();
+    },
     deleteSingleRecord: function deleteSingleRecord(student_id) {
       var _this4 = this;
 
@@ -2131,11 +2152,14 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
+    isChecked: function isChecked(student_id) {
+      return this.checked.includes(student_id);
+    },
     getStudents: function getStudents() {
       var _this6 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      axios.get("/api/students?page=" + page + "&paginate=" + this.paginate + "&q=" + this.search + "&selectedClass=" + this.selectedClass + "&selectedSection=" + this.selectedSection).then(function (response) {
+      axios.get("/api/students?page=" + page + "&paginate=" + this.paginate + "&q=" + this.search + "&selectedClass=" + this.selectedClass + "&selectedSection=" + this.selectedSection + "&sort_direction=" + this.sort_direction + "&sort_field=" + this.sort_field).then(function (response) {
         _this6.students = response.data;
       });
     }
@@ -38861,31 +38885,123 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("th", [
-                _vm._v(
-                  "\n                        Student's Name\n                    "
-                )
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.change_sort("name")
+                      }
+                    }
+                  },
+                  [_vm._v("Student's Name")]
+                ),
+                _vm._v(" "),
+                _vm.sort_direction == "desc" && _vm.sort_field == "name"
+                  ? _c("span", [_vm._v("↑")])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.sort_direction == "asc" && _vm.sort_field == "name"
+                  ? _c("span", [_vm._v("↓")])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("th", [
-                _vm._v("\n                        Email\n                    ")
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.change_sort("email")
+                      }
+                    }
+                  },
+                  [_vm._v("Email")]
+                ),
+                _vm._v(" "),
+                _vm.sort_direction == "desc" && _vm.sort_field == "email"
+                  ? _c("span", [_vm._v("↑")])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.sort_direction == "asc" && _vm.sort_field == "email"
+                  ? _c("span", [_vm._v("↓")])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("th", [
-                _vm._v(
-                  "\n                        Address\n                    "
-                )
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.change_sort("address")
+                      }
+                    }
+                  },
+                  [_vm._v("Address")]
+                ),
+                _vm._v(" "),
+                _vm.sort_direction == "desc" && _vm.sort_field == "address"
+                  ? _c("span", [_vm._v("↑")])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.sort_direction == "asc" && _vm.sort_field == "address"
+                  ? _c("span", [_vm._v("↓")])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("th", [
-                _vm._v(
-                  "\n                        Phone Number\n                    "
-                )
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.change_sort("phone_number")
+                      }
+                    }
+                  },
+                  [_vm._v("Phone Number")]
+                ),
+                _vm._v(" "),
+                _vm.sort_direction == "desc" && _vm.sort_field == "phone_number"
+                  ? _c("span", [_vm._v("↑")])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.sort_direction == "asc" && _vm.sort_field == "phone_number"
+                  ? _c("span", [_vm._v("↓")])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("th", [
-                _vm._v(
-                  "\n                        Created At\n                    "
-                )
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "#" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.change_sort("created_at")
+                      }
+                    }
+                  },
+                  [_vm._v("Created At")]
+                ),
+                _vm._v(" "),
+                _vm.sort_direction == "desc" && _vm.sort_field == "created_at"
+                  ? _c("span", [_vm._v("↑")])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.sort_direction == "asc" && _vm.sort_field == "created_at"
+                  ? _c("span", [_vm._v("↓")])
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("th", [_vm._v("Class")]),
@@ -38896,86 +39012,93 @@ var render = function() {
             ]),
             _vm._v(" "),
             _vm._l(_vm.students.data, function(student) {
-              return _c("tr", { key: student.id }, [
-                _c("td", [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.checked,
-                        expression: "checked"
-                      }
-                    ],
-                    attrs: { type: "checkbox" },
-                    domProps: {
-                      value: student.id,
-                      checked: Array.isArray(_vm.checked)
-                        ? _vm._i(_vm.checked, student.id) > -1
-                        : _vm.checked
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.checked,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = student.id,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 && (_vm.checked = $$a.concat([$$v]))
-                          } else {
-                            $$i > -1 &&
-                              (_vm.checked = $$a
-                                .slice(0, $$i)
-                                .concat($$a.slice($$i + 1)))
-                          }
-                        } else {
-                          _vm.checked = $$c
+              return _c(
+                "tr",
+                {
+                  key: student.id,
+                  class: _vm.isChecked(student.id) ? "table-primary" : ""
+                },
+                [
+                  _c("td", [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.checked,
+                          expression: "checked"
                         }
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.name))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.email))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.address))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.phone_number))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.created_at))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.class))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(student.section))]),
-                _vm._v(" "),
-                _c("td", [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-danger btn-sm",
-                      attrs: {
-                        onclick:
-                          "confirm('Are you sure you wanna delete this Record?') || event.stopImmediatePropagation()"
+                      ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        value: student.id,
+                        checked: Array.isArray(_vm.checked)
+                          ? _vm._i(_vm.checked, student.id) > -1
+                          : _vm.checked
                       },
                       on: {
-                        click: function($event) {
-                          return _vm.deleteSingleRecord(student.id)
+                        change: function($event) {
+                          var $$a = _vm.checked,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = student.id,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 && (_vm.checked = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.checked = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.checked = $$c
+                          }
                         }
                       }
-                    },
-                    [
-                      _c("i", {
-                        staticClass: "fa fa-trash",
-                        attrs: { "aria-hidden": "true" }
-                      })
-                    ]
-                  )
-                ])
-              ])
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(student.name))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(student.email))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(student.address))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(student.phone_number))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(student.created_at))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(student.class))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(student.section))]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger btn-sm",
+                        attrs: {
+                          onclick:
+                            "confirm('Are you sure you wanna delete this Record?') || event.stopImmediatePropagation()"
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.deleteSingleRecord(student.id)
+                          }
+                        }
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "fa fa-trash",
+                          attrs: { "aria-hidden": "true" }
+                        })
+                      ]
+                    )
+                  ])
+                ]
+              )
             })
           ],
           2

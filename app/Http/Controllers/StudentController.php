@@ -16,6 +16,17 @@ class StudentController extends Controller
         $selectedClass = request('selectedClass');
         $selectedSection = request('selectedSection');
 
+        $sort_direction = request('sort_direction','desc');
+
+        if(!in_array($sort_direction,['asc','desc'])){
+            $sort_direction = 'desc';
+        }
+
+        $sort_field = request('sort_field','created_at');
+        if(!in_array($sort_field,['name','email','address','phone_number','created_at'])){
+            $sort_field = 'created_at';
+        }
+
         $students = Student::with(['class','section'])
         ->when($selectedClass,function($query) use ($selectedClass){
             $query->where('class_id',$selectedClass);
@@ -24,6 +35,7 @@ class StudentController extends Controller
             $query->where('section_id',$selectedSection);
         })
         ->search(trim($search_term))
+        ->orderBy($sort_field,$sort_direction)
         ->paginate($paginate);
 
         return StudentResource::collection($students);
