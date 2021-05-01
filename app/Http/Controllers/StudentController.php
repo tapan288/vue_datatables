@@ -29,4 +29,22 @@ class StudentController extends Controller
         return StudentResource::collection($students);
 
     }
+
+    public function allStudents()
+    {
+        return Student::pluck('id');
+    }
+
+    public function destroy(Student $student)
+    {
+        $student->delete();
+        return response()->noContent();
+    }
+
+    public function massDestroy($students)
+    {
+        $studentsArray = explode(',',$students);
+        Student::whereKey($studentsArray)->delete();
+        return response()->noContent();
+    }
 }
