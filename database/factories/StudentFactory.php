@@ -31,7 +31,7 @@ class StudentFactory extends Factory
             'phone_number' => $this->faker->phoneNumber,
             'address' => $this->faker->address,
             'class_id' => $class_id,
-            'section_id' => $section_id,
+            'section_id' => $section_id->id,
         ];
     }
 }
