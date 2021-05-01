@@ -23,4 +23,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/students',[StudentController::class,'index']);
 
-
+Route::get('/classes',[ClassesController::class,'index']);
+Route::get('/sections',[SectionController::class,'index']);
