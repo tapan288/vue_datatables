@@ -35,7 +35,7 @@ class StudentController extends Controller
         ->when($selectedSection,function($query) use ($selectedSection){
             $query->where('section_id',$selectedSection);
         })
-
+        ->orderBy($sort_field, $sort_direction)
         ->search(trim($search_term))
         ->paginate($paginate);
 
