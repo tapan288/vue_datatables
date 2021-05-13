@@ -21,13 +21,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/students',[StudentController::class,'index']);
-Route::get('/students/all',[StudentController::class,'allStudents']);
+Route::get('/students', [StudentController::class, 'index']);
 
-Route::get('/classes',[ClassesController::class,'index']);
-Route::get('/sections',[SectionController::class,'index']);
+Route::get('/classes', [ClassesController::class, 'index']);
+Route::get('/sections', [SectionController::class, 'index']);
 
-Route::delete('student/delete/{student}', [StudentController::class,'destroy']);
-Route::delete('students/massDestroy/{students}', [StudentController::class,'massDestroy']);
+Route::delete('student/delete/{student}', [StudentController::class, 'destroy']);
+Route::delete('students/massDestroy/{students}', [StudentController::class, 'massDestroy']);
 
-Route::get('students/export/{students}',[StudentController::class,'export']);
+Route::get('students/export/{students}', [StudentController::class, 'export']);
