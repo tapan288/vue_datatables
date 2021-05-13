@@ -2058,6 +2058,94 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2071,9 +2159,11 @@ __webpack_require__.r(__webpack_exports__);
       checked: [],
       selectPage: false,
       selectAll: false,
-      sort_direction: 'desc',
-      sort_field: 'created_at',
-      url: ''
+      sort_direction: "desc",
+      sort_field: "created_at",
+      url: "",
+      getStudentsUrl: "",
+      getStudentsUrlWithoutPaginate: ""
     };
   },
   watch: {
@@ -2086,6 +2176,7 @@ __webpack_require__.r(__webpack_exports__);
     selectedClass: function selectedClass(value) {
       var _this = this;
 
+      this.selectedSection = "";
       axios.get("/api/sections?class_id=" + this.selectedClass).then(function (response) {
         _this.sections = response.data.data;
       });
@@ -2116,8 +2207,12 @@ __webpack_require__.r(__webpack_exports__);
     selectAllRecords: function selectAllRecords() {
       var _this3 = this;
 
-      axios.get('/api/students/all').then(function (response) {
-        _this3.checked = response.data;
+      axios.get(this.getStudentsUrlWithoutPaginate).then(function (response) {
+        // console.log(response.data);
+        _this3.checked = [];
+        response.data.data.forEach(function (student) {
+          _this3.checked.push(student.id);
+        });
         _this3.selectAll = true;
       });
     },
@@ -2133,12 +2228,12 @@ __webpack_require__.r(__webpack_exports__);
     deleteSingleRecord: function deleteSingleRecord(student_id) {
       var _this4 = this;
 
-      axios["delete"]('/api/student/delete/' + student_id).then(function (response) {
+      axios["delete"]("/api/student/delete/" + student_id).then(function (response) {
         _this4.checked = _this4.checked.filter(function (id) {
           return id != student_id;
         });
 
-        _this4.$toast.success('Student Deleted Successfully');
+        _this4.$toast.success("Student Deleted Successfully");
 
         _this4.getStudents();
       });
@@ -2146,9 +2241,9 @@ __webpack_require__.r(__webpack_exports__);
     deleteRecords: function deleteRecords() {
       var _this5 = this;
 
-      axios["delete"]('/api/students/massDestroy/' + this.checked).then(function (response) {
+      axios["delete"]("/api/students/massDestroy/" + this.checked).then(function (response) {
         if (response.status == 204) {
-          _this5.$toast.success('Selected Students were Deleted Successfully');
+          _this5.$toast.success("Selected Students were Deleted Successfully");
 
           _this5.checked = [];
 
@@ -2163,7 +2258,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this6 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      axios.get("/api/students?page=" + page + "&paginate=" + this.paginate + "&q=" + this.search + "&selectedClass=" + this.selectedClass + "&selectedSection=" + this.selectedSection + "&sort_direction=" + this.sort_direction + "&sort_field=" + this.sort_field).then(function (response) {
+      this.getStudentsUrlWithoutPaginate = "/api/students?" + "q=" + this.search + "&sort_direction=" + this.sort_direction + "&sort_field=" + this.sort_field + "&selectedClass=" + this.selectedClass + "&selectedSection=" + this.selectedSection;
+      this.getStudentsUrl = this.getStudentsUrlWithoutPaginate.concat("&paginate=" + this.paginate + "&page=" + page);
+      axios.get(this.getStudentsUrl).then(function (response) {
         _this6.students = response.data;
       });
     }
@@ -2172,7 +2269,6 @@ __webpack_require__.r(__webpack_exports__);
     var _this7 = this;
 
     axios.get("/api/classes").then(function (response) {
-      console.log(response);
       _this7.classes = response.data.data;
     });
     this.getStudents();
@@ -38652,7 +38748,13 @@ var render = function() {
                     return _c(
                       "option",
                       { key: item.id, domProps: { value: item.id } },
-                      [_vm._v(_vm._s(item.name))]
+                      [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(item.name) +
+                            "\n                        "
+                        )
+                      ]
                     )
                   })
                 ],
@@ -38710,7 +38812,13 @@ var render = function() {
                         return _c(
                           "option",
                           { key: section.id, domProps: { value: section.id } },
-                          [_vm._v(_vm._s(section.name))]
+                          [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(section.name) +
+                                "\n                        "
+                            )
+                          ]
                         )
                       })
                     ],
@@ -38810,7 +38918,7 @@ var render = function() {
     _vm._v(" "),
     _vm.selectPage
       ? _c("div", { staticClass: "col-md-10 mb-2" }, [
-          _vm.selectAll
+          _vm.selectAll || _vm.students.meta.total == _vm.checked.length
             ? _c("div", [
                 _vm._v(
                   "\n            You are currently selecting all\n            "
@@ -38821,7 +38929,9 @@ var render = function() {
             : _c("div", [
                 _vm._v("\n            You have selected "),
                 _c("strong", [_vm._v(_vm._s(_vm.checked.length))]),
-                _vm._v(" items, Do you want to\n            Select All "),
+                _vm._v(
+                  " items,\n            Do you want to Select All\n            "
+                ),
                 _c("strong", [_vm._v(_vm._s(_vm.students.meta.total))]),
                 _vm._v("?\n            "),
                 _c(
